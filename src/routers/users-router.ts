@@ -8,9 +8,9 @@ const usersRouter = express.Router()
 usersRouter.post('/users', (req, res) => {
     const user: User = req.body
     //TODO: Criar e salvar um novo item
-    itensRepository.criar(item, (id) => {
+    itensRepository.criar(user, (id) => {
         if (id) {
-            res.status(201).location(`/itens/${id}`).send()
+            res.status(201).location(`/users/${id}`).send()
         } else {
             res.status(400).send()
         }
@@ -44,6 +44,7 @@ usersRouter.get('/users', (req, res) => {
             cpf: 12345
         },
     ]
+    usersRepository.readAll((users) => res.json(users))
     res.json(users)
 })
 
