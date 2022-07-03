@@ -1,6 +1,6 @@
 import express from 'express'
 import { v4 } from 'uuid'
-import User from '../models/user'
+import { User } from '../models/user'
 import usersRepository from '../repositories/users-repository'
 
 const usersRouter = express.Router()
@@ -8,13 +8,6 @@ const usersRouter = express.Router()
 usersRouter.post('/users', (req, res) => {
     const user: User = req.body
     //TODO: Criar e salvar um novo item
-    itensRepository.criar(user, (id) => {
-        if (id) {
-            res.status(201).location(`/users/${id}`).send()
-        } else {
-            res.status(400).send()
-        }
-    })
     usersRepository.create(user, (id) => {
         if (id) {
             res.status(201).location(`/users/${id}`).send()

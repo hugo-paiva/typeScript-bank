@@ -3,7 +3,6 @@ interface User {
     name: string
     birthday: string
     email: string
-    cpf: number
 }
 
 export { User }
