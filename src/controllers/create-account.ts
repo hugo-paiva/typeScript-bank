@@ -1,16 +1,16 @@
 import { ApiResponse } from "../models";
 import { Request, Response } from "express";
-import { CreateUserService } from "../services/create-user";
+import { CreateAccountService } from "../services/create-account";
 import { ResponseStandardize } from "../utils/responseStandardize";
 
-class CreateUser {
+class CreateAccount {
 
-    private createUserService = CreateUserService;
+    private createAccountService = CreateAccountService;
     public async handle(req: Request, res: Response) {
 
         try {
 
-            const response = await new this.createUserService().run(req.body);
+            const response = await new this.createAccountService().run(req.body);
 
             new ResponseStandardize().success(res, 201, response);
 
@@ -23,4 +23,4 @@ class CreateUser {
     }
 }
 
-export { CreateUser };
+export { CreateAccount };

@@ -1,0 +1,40 @@
+import { Account } from '../src/models/account'
+
+class AccountDataValidator {
+    public account: Partial<Account>
+    public allErrors: string
+
+    public constructor(account: Account) {
+        this.allErrors = ''
+        this.account = this.validate(account);
+    }
+
+    private validate( account: Account ) : Partial<Account> {
+        // const validName = new NameValidator(user.name);
+        // const validEmail = new EmailValidator(user.email);
+        // const validBirthday = new DateValidator(user.birthday);
+        const validAgency = new agencyValidator(account.agency);
+        const validagencyCheckDigit = new agencyValidator(account.agency);
+        const accountNumber = new agencyValidator(account.agency);
+        const accountCheckDigit = new agencyValidator(account.agency);
+        const accountBalance = new agencyValidator(account.agency);
+        const validAgency = new agencyValidator(account.agency);
+
+        this.allErrors = `${validEmail.allErrors}${validEmail.allErrors}${validBirthday.allErrors}`;
+
+        const accountData = {
+
+    userId: string
+    agency: string
+    agencyCheckDigit: string
+    accountNumber: string
+    accountCheckDigit: string
+    accountBalance: string
+        } as Partial<Account>;
+
+        return accountData;
+
+    }
+}
+
+export { AccountDataValidator };

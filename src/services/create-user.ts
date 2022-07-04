@@ -1,37 +1,51 @@
 import { v4 } from "uuid";
+import { UserDataValidator } from "../../validators/userDataValidator";
+import { CreateAccount } from "../controllers/create-account";
 import { ApiResponse } from "../models";
+import { Account } from "../models/account";
 import { User } from "../models/user";
+import { AccountsTable } from "../repositories/accounts";
+import { UsersTable } from "../repositories/users";
+import { GenerateAccountData } from "../utils/generateAccountData";
 
 class CreateUserService {
-    private regexForEmail = /^(\S+)@((?:(?:(?!-)[a-zA-Z0-9-]{1,62}[a-zA-Z0-9])\.)+[a-zA-Z0-9]{2,12})$/;
 
-    private allErrors: string = '';
+    private usersTable = UsersTable;
 
-    public run(user: User): ApiResponse {
-        if (!user.name) {
-            this.allErrors = this.allErrors += 'name is required /'
-        }
-        if (user.name.length < 5) {
-            this.allErrors = this.allErrors += 'fullname is required /'
-        }
-        if (! this.regexForEmail.test(user.email)) {
-            this.allErrors = this.allErrors += 'email is invalid /'
-        }
-        if (!new Date(user.birthday).getTime()) {
-            this.allErrors = this.allErrors += 'name is required /'
-        }
+    public async run(user: User): Promise<ApiResponse> {
 
-        if (this.allErrors.length != 0) {
-            throw new Error(`400: ${this.allErrors}`)
+        const validUserData = new UserDataValidator(user);
 
+        if (validUserData.allErrors.length != 0) {
+            throw new Error(`400: ${validUserData.allErrors}`)
+        }
+        const isUserAlreadyCreated = await new this.usersTable().lookUpUser(validUserData.user as User);
+        console.log(isUserAlreadyCreated[0].id);
+
+        if (!isUserAlreadyCreated) {
+            validUserData.user.id = v4()
+
+            const isUserInserted = await new this.usersTable().insertUser(validUserData.user as User);
         }
 
-        user.id = v4()
+        const accountData = new GenerateAccountData();
+
+        const isAccountCreated = await new AccountsTable().insertAccount(accountData as Account);
+
+
+        // if (isUserInserted) {
+        if (true) {
+            return {
+                data: validUserData.user,
+                messages: []
+            } as ApiResponse
+        }
 
         return {
-            data: user,
-            messages: []
+            data: validUserData.user,
+            messages: [ 'An error has occurred while creating user' ]
         } as ApiResponse
+
     }
 }
 
